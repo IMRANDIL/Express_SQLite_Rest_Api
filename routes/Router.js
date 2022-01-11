@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { send } = require('express/lib/response');
 const User = require('../model/User')
 
 
@@ -39,6 +40,37 @@ router.get('/users/:id', async (req, res) => {
         console.log(error);
     }
 
+});
+
+
+//update
+
+router.put('/users/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userSpec = await User.findOne({ where: { id: id } });
+        userSpec.username = req.body.username;
+        await userSpec.save();
+        res.send(userSpec)
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+
+
+//delete one...
+
+
+router.delete('/users/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await User.findOne({ where: { id: id } });
+        await data.destroy();
+        res.send(`Id ${data.id} deleted`)
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 
